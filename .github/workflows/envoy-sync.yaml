@@ -27,6 +27,15 @@ jobs:
         key: ${{ secrets.ENVOY_CI_UPDATE_BOT_KEY }}
         app_id: ${{ secrets.ENVOY_CI_UPDATE_APP_ID }}
 
+    - name: Debug Token
+      run: |
+        if [[ -z "${{ steps.appauth.outputs.token }}" ]]; then
+          echo "Token is empty!"
+          exit 1
+        else
+          echo "Token is set."
+        fi
+
     # Checkout the repo
     - name: 'Checkout Repository'
       uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.6
