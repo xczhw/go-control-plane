@@ -105,7 +105,7 @@ commit_changes () {
     # 推送更改
     echo "DEBUG: Pushing changes to origin/main..."
     git remote -v
-    git push origin main || {
+    git push origin master || {
         echo "DEBUG: Git push failed"
         exit 1
     }
