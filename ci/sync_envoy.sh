@@ -6,8 +6,8 @@ MIRROR_MSG="Mirrored from xczhw/my-envoy"
 SRCS=(envoy contrib)
 GO_TARGETS=(@envoy_api//...)
 IMPORT_BASE="github.com/xczhw/go-control-plane"
-COMMITTER_NAME="update-envoy[bot]"
-COMMITTER_EMAIL="135279899+update-envoy[bot]@users.noreply.github.com"
+COMMITTER_NAME="xczhw"
+COMMITTER_EMAIL="xczhw@outlook.com"
 ENVOY_SRC_DIR="${ENVOY_SRC_DIR:-}"
 
 
