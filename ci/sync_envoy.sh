@@ -68,7 +68,7 @@ commit_changes () {
     fi
 
     # # 输出文件数量和示例文件
-    # echo "DEBUG: Total changed files: $(echo "$changed" | wc -l)"
+    echo "DEBUG: Total changed files: $(echo "$changed" | wc -l)"
     # echo "DEBUG: Sample changed files:"
     # echo "$changed" | head -n 10  # 只显示前 10 个文件
 
