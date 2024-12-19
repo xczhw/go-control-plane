@@ -39,7 +39,7 @@ jobs:
     - name: 'Checkout Repository'
       uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.6
       with:
-        repository: xczhw/envoy
+        repository: xczhw/my-envoy
         ref: master
         fetch-depth: 0
         path: upstream
