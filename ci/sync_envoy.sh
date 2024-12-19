@@ -59,41 +59,60 @@ sync_protos () {
 commit_changes () {
     echo "DEBUG: Starting commit_changes..."
     local last_envoy_sha changes changed
+
+    # 检测变更文件
     changed="$(git diff HEAD --name-only | grep -v envoy/COMMIT || :)"
     if [[ -z "$changed" ]]; then
         echo "DEBUG: No changes detected, skipping commit."
         return
     fi
 
-    echo "DEBUG: Changes detected: $changed"
+    # 输出文件数量和示例文件
+    echo "DEBUG: Total changed files: $(echo "$changed" | wc -l)"
+    echo "DEBUG: Sample changed files:"
+    echo "$changed" | head -n 10  # 只显示前 10 个文件
+
+    # 获取最新的 Envoy SHA
     last_envoy_sha="$(get_last_envoy_sha)"
     echo "DEBUG: Last Envoy SHA: ${last_envoy_sha}"
-    changes="$(git -C "${ENVOY_SRC_DIR}" rev-list "${last_envoy_sha}"..HEAD || :)"
-    echo "DEBUG: Detected changes: $changes"
 
+    # 检测 Envoy 的变更
+    changes="$(git -C "${ENVOY_SRC_DIR}" rev-list "${last_envoy_sha}"..HEAD || :)"
+    echo "DEBUG: Detected changes from Envoy."
+
+    # 获取最新的提交
     latest_commit="$(git -C "${ENVOY_SRC_DIR}" rev-list HEAD -n1)"
     echo "DEBUG: Latest commit: ${latest_commit}"
     echo "$latest_commit" > envoy/COMMIT
 
-    echo "DEBUG: Configuring Git user..."
+    # 配置 Git 用户
     git config user.email "$COMMITTER_EMAIL"
     git config user.name "$COMMITTER_NAME"
+    echo "DEBUG: Git user.name is $(git config user.name)"
+    echo "DEBUG: Git user.email is $(git config user.email)"
 
-    echo "DEBUG: Adding changes to Git..."
-    git add envoy contrib || echo "DEBUG: Failed to add files to Git"
+    # 添加更改到 Git
+    echo "DEBUG: Staging files for commit..."
+    git add envoy contrib || { echo "DEBUG: Failed to stage files"; exit 1; }
+
+    # 提交更改
+    echo "DEBUG: Committing changes..."
     git commit --allow-empty -s -m "${MIRROR_MSG} @ ${latest_commit}" || {
         echo "DEBUG: Git commit failed"
         exit 1
     }
 
+    # 推送更改
     echo "DEBUG: Pushing changes to origin/main..."
+    git remote -v
     git push origin main || {
         echo "DEBUG: Git push failed"
         exit 1
     }
 
-    echo "DEBUG: commit_changes completed."
+    echo "DEBUG: commit_changes completed successfully."
 }
+
 
 build_protos
 sync_protos
